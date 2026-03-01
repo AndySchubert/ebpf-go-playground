@@ -25,4 +25,38 @@ $(TARGET_BPF): $(BPF_SRC)
 .PHONY: clean
 clean:
 	go clean
-	
+
+# -----------------------------
+# Docker helpers (tutorial flow)
+# -----------------------------
+
+.PHONY: docker-build docker-shell docker-run docker-clean docker-chown
+
+docker-build:
+	docker build -t $(DOCKER_IMAGE) .
+
+# Interactive shell in the container (useful for debugging / manual runs)
+docker-shell:
+	docker run --rm -it --privileged \
+		-v "$$PWD:/app" \
+		-v /sys/kernel/debug:/sys/kernel/debug \
+		-v /lib/modules:/lib/modules:ro \
+		--entrypoint /bin/bash \
+		$(DOCKER_IMAGE)
+
+# Clean, rebuild, and run inside the container in one command
+docker-run:
+	docker run --rm -it --privileged \
+		-v "$$PWD:/app" \
+		-v /sys/kernel/debug:/sys/kernel/debug \
+		-v /lib/modules:/lib/modules:ro \
+		--entrypoint /bin/bash \
+		$(DOCKER_IMAGE) \
+		-lc "make clean && make && ./$(TARGET)"
+
+# Remove artifacts from the repo (host side)
+docker-clean: clean
+
+# Fix root-owned files created by container builds (run on host)
+docker-chown:
+	sudo chown -R $$USER:$$USER .

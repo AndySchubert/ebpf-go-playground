@@ -1,4 +1,4 @@
-FROM ubuntu:20.10
+FROM ubuntu:20.04
 
 # Define variables.
 ARG GOVERSION=1.15.15
