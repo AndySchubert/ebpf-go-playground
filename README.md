@@ -2,6 +2,9 @@
 
 This repository is based on Liz Rice's "Beginner's Guide to eBPF Programming with Go" talk (GOTO 2021).
 
+Original talk: https://www.youtube.com/watch?v=uBqRv8bDroc&t
+Original repository: https://github.com/lizrice/libbpfgo-beginners
+
 I recreated the example locally to:
 - Understand how libbpfgo works
 - Explore how BPF programs are compiled with clang
